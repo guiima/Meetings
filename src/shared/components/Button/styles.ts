@@ -12,7 +12,7 @@ export const ButtonContainer = styled.TouchableOpacity`
     props.type === 'primary'
       ? theme.colors.primaryButton.background
       : theme.colors.secondaryButton.background};
-  height: 30px;
+  height: 40px;
   width: ${(props: ButtonContainerProps) => props.size}px;
   align-items: center;
   justify-content: center;

@@ -1,8 +1,9 @@
 import * as constants from './constants';
 
 const colors = {
-  // background color of the application
   background: constants.white,
+
+  primaryColor: constants.cornflower,
 
   primaryButton: {
     background: constants.cornflower,
