@@ -1,6 +1,7 @@
 import styled from 'styled-components/native';
 import {theme} from '../../styles/theme';
 import {Dimensions} from 'react-native';
+import SelectMultiple from 'react-native-select-multiple';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -13,6 +14,9 @@ export const ContentForm = styled.View`
   width: ${windowWidth - 40}px;
   align-self: center;
   padding-top: 50px;
+  justify-content: space-between;
+  /* background-color: red; */
+  flex: 1;
 `;
 
 export const TextInput = styled.TextInput`
@@ -52,4 +56,22 @@ export const DateSelected = styled.Text`
   color: ${theme.colors.primaryColor};
   width: 50%;
   text-align: center;
+`;
+
+export const Body = styled.View``;
+
+export const Footer = styled.View`
+  background: red;
+  margin-bottom: 30px;
+`;
+
+export const HideShowButton = styled.TouchableOpacity``;
+
+export const SelectMultipleStyled = styled(SelectMultiple)`
+  height: 200px;
+`;
+
+export const ContentMultiSelect = styled.View`
+  border: 1px solid;
+  border-color: gray;
 `;
