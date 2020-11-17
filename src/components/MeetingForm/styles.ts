@@ -65,13 +65,19 @@ export const Footer = styled.View`
   margin-bottom: 30px;
 `;
 
-export const HideShowButton = styled.TouchableOpacity``;
-
 export const SelectMultipleStyled = styled(SelectMultiple)`
   height: 200px;
 `;
 
-export const ContentMultiSelect = styled.View`
+export const Error = styled.Text`
+  color: ${theme.colors.errorMessage.colorText};
+  margin-top: -20px;
+  margin-bottom: 5px;
+`;
+
+export const ContetMultiSelect = styled.View`
   border: 1px solid;
-  border-color: gray;
+  border-color: ${theme.colors.primaryTextColor};
+  border-radius: 5px;
+  padding: 1px;
 `;

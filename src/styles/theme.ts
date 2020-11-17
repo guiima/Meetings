@@ -3,6 +3,8 @@ import * as constants from './constants';
 const colors = {
   background: constants.white,
 
+  primaryTextColor: constants.pencillead,
+
   primaryColor: constants.cornflower,
 
   primaryButton: {
@@ -13,6 +15,10 @@ const colors = {
   secondaryButton: {
     background: constants.tigerlily,
     colorText: constants.white,
+  },
+
+  errorMessage: {
+    colorText: constants.tigerlily,
   },
 };
 

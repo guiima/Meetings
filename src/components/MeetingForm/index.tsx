@@ -18,9 +18,9 @@ import {
   DateSelected,
   Body,
   Footer,
-  HideShowButton,
   SelectMultipleStyled,
-  ContentMultiSelect,
+  Error,
+  ContetMultiSelect,
 } from './styles';
 
 import {useCount} from '../../context/Count';
@@ -130,14 +130,14 @@ const MeetingForm: React.FC = () => {
                 value={values.title}
                 onChangeText={handleChange('title')}
               />
-              {errors.title && <Text>{errors.title}</Text>}
+              {errors.title && <Error>{errors.title}</Error>}
               <Label>Description</Label>
               <TextInput
                 ref={description}
                 value={values.description}
                 onChangeText={handleChange('description')}
               />
-              {errors.description && <Text>{errors.description}</Text>}
+              {errors.description && <Error>{errors.description}</Error>}
 
               <Row>
                 <Label>Date: </Label>
@@ -156,7 +156,7 @@ const MeetingForm: React.FC = () => {
                   onChange={(data) => changeDate(data)}
                 />
               )}
-              {errors.startAt && <Text>{errors.startAt}</Text>}
+              {errors.startAt && <Error>{errors.startAt}</Error>}
 
               <Row>
                 <Label>Início: </Label>
@@ -178,7 +178,7 @@ const MeetingForm: React.FC = () => {
                   onChange={(data) => changeStartAt(data)}
                 />
               )}
-              {errors.startAt && <Text>{errors.startAt}</Text>}
+              {errors.startAt && <Error>{errors.startAt}</Error>}
 
               <Row>
                 <Label>Final: </Label>
@@ -199,14 +199,15 @@ const MeetingForm: React.FC = () => {
                   onChange={(data) => changeEndAt(data)}
                 />
               )}
-              {errors.endAt && <Text>{errors.endAt}</Text>}
-              <ContentMultiSelect>
+              {errors.endAt && <Error>{errors.endAt}</Error>}
+
+              <ContetMultiSelect>
                 <SelectMultipleStyled
                   items={fruits}
                   selectedItems={itemSelected}
                   onSelectionsChange={onSelectionsChange}
                 />
-              </ContentMultiSelect>
+              </ContetMultiSelect>
             </Body>
 
             <Footer>
