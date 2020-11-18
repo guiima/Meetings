@@ -18,7 +18,6 @@ export const ContentMeeting = styled.View`
   height: 100px;
   width: 95%;
   align-self: center;
-  margin-bottom: 30px;
   border: 1px solid;
   border-color: ${theme.colors.cardMeeting.borderColor};
   align-items: center;
@@ -28,6 +27,8 @@ export const ContentMeeting = styled.View`
 export const Title = styled.Text`
   font-size: 16px;
   font-weight: 700;
+  flex: 1;
+  text-align: center;
 `;
 
 export const Info = styled.Text`
@@ -40,4 +41,20 @@ export const Collabs = styled.View`
   flex-direction: row;
   width: 100%;
   justify-content: center;
+`;
+
+export const DeleteItemButton = styled.TouchableOpacity`
+  align-self: flex-end;
+`;
+
+export const SelectItemButton = styled.TouchableOpacity`
+  align-items: center;
+  margin-bottom: 30px;
+`;
+
+export const HeaderCard = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  align-items: center;
 `;

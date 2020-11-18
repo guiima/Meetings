@@ -1,12 +1,23 @@
 import React, {useEffect} from 'react';
 import {NavigationContainerRef} from '@react-navigation/native';
-import {Text, ScrollView} from 'react-native';
+import {Text, ScrollView, View} from 'react-native';
 import Button from '../../shared/components/Button';
 import {getAllMeetings} from '../../services/meetings';
 import {Meetings} from '../../types/meetings';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import {useState} from 'react';
-import {Container, Top, ContentMeeting, Title, Info, Collabs} from './styles';
+import {
+  Container,
+  Top,
+  ContentMeeting,
+  Title,
+  Info,
+  Collabs,
+  DeleteItemButton,
+  SelectItemButton,
+  HeaderCard,
+} from './styles';
 
 interface MeetingListProps {
   navigation: NavigationContainerRef;
@@ -55,24 +66,37 @@ const MeetingList: React.FC<MeetingListProps> = ({navigation}) => {
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
         {meetings.map((item) => {
           return (
-            <ContentMeeting key={item.id}>
-              <Title>{item.title}</Title>
-              <Info>Data: {formatDate(item.date)}</Info>
-              <Info>
-                Horário: {formatHours(item.startAt)} - {formatHours(item.endAt)}
-              </Info>
-              <Collabs>
-                <Info>Colaboradores: </Info>
-                {item.collaborators.map((collaborator, index) => {
-                  return (
-                    <Info key={index}>
-                      {collaborator.value}
-                      {item.collaborators.length === index + 1 ? '' : ','}
-                    </Info>
-                  );
-                })}
-              </Collabs>
-            </ContentMeeting>
+            <SelectItemButton
+              key={item.id}
+              onPress={() => console.log('select', item.id)}
+            >
+              <ContentMeeting>
+                <HeaderCard>
+                  <Title>{item.title}</Title>
+                  <DeleteItemButton
+                    onPress={() => console.log('deletei', item.id)}
+                  >
+                    <Icon name="trash" size={18} color="#000" />
+                  </DeleteItemButton>
+                </HeaderCard>
+                <Info>Data: {formatDate(item.date)}</Info>
+                <Info>
+                  Horário: {formatHours(item.startAt)} -{' '}
+                  {formatHours(item.endAt)}
+                </Info>
+                <Collabs>
+                  <Info>Colaboradores: </Info>
+                  {item.collaborators.map((collaborator, index) => {
+                    return (
+                      <Info key={index}>
+                        {collaborator.value}
+                        {item.collaborators.length === index + 1 ? '' : ','}
+                      </Info>
+                    );
+                  })}
+                </Collabs>
+              </ContentMeeting>
+            </SelectItemButton>
           );
         })}
       </ScrollView>
