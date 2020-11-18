@@ -61,7 +61,6 @@ export const DateSelected = styled.Text`
 export const Body = styled.View``;
 
 export const Footer = styled.View`
-  background: red;
   margin-bottom: 30px;
 `;
 

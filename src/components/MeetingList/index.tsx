@@ -80,7 +80,11 @@ const MeetingList: React.FC<MeetingListProps> = ({navigation}) => {
           return (
             <SelectItemButton
               key={item.id}
-              onPress={() => console.log('select', item.id)}
+              onPress={() =>
+                navigation.navigate('MeetingForm', {
+                  meeting: item,
+                })
+              }
             >
               <ContentMeeting>
                 <HeaderCard>
@@ -100,7 +104,7 @@ const MeetingList: React.FC<MeetingListProps> = ({navigation}) => {
                     return (
                       <Info key={index}>
                         {collaborator.value}
-                        {item.collaborators.length === index + 1 ? '' : ','}
+                        {item.collaborators.length === index + 1 ? '.' : ','}
                       </Info>
                     );
                   })}

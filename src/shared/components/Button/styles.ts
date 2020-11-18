@@ -7,7 +7,6 @@ interface ButtonContainerProps {
 }
 
 export const ButtonContainer = styled.TouchableOpacity`
-  background: ${theme.colors.primaryButton.background};
   background: ${(props: ButtonContainerProps) =>
     props.type === 'primary'
       ? theme.colors.primaryButton.background

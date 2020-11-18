@@ -7,6 +7,7 @@ import Button from '../../shared/components/Button';
 import {Meetings} from '../../types/meetings';
 import {getCollaborators} from '../../services/collaborators';
 import {saveMeeting} from '../../services/meetings';
+import {useRoute, RouteProp} from '@react-navigation/native';
 
 import {
   Container,
@@ -53,6 +54,12 @@ interface Event {
   type: string;
 }
 
+type ParamList = {
+  MeetingForm: {
+    meeting?: Meetings;
+  };
+};
+
 interface MeetingFormProps {
   navigation: NavigationContainerRef;
 }
@@ -64,15 +71,19 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
   const [showDate, setShowDate] = useState(false);
   const [showStartAt, setShowStartAt] = useState(false);
   const [showEndAt, setShowEndAt] = useState(false);
+  const [initialValues, setInitialValues] = useState({
+    title: '',
+    description: '',
+  });
   const [collaborators, setCollaborators] = useState<Collaborators[]>([]);
   const [listCollaborators, setListCollaborators] = useState<string[]>([]);
   const [errosWitoutFormik, setErrosWitoutFormik] = useState<ErrosProps>({
     collaborators: null,
   });
-
-  const image = useRef(null);
   const title = useRef(null);
   const description = useRef(null);
+  const route = useRoute<RouteProp<ParamList, 'MeetingForm'>>();
+  const [loading, setLoading] = useState(false);
 
   const changeDate = (Event: Event) => {
     setShowDate((state) => !state);
@@ -156,117 +167,142 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
       });
   };
 
+  const populateForm = (meeting: Meetings) => {
+    setInitialValues({
+      title: meeting.title,
+      description: meeting.description ? meeting.description : '',
+    });
+    setDate(new Date(meeting.date));
+    setStartAt(new Date(meeting.startAt));
+    setEndAt(new Date(meeting.endAt));
+    setCollaborators(meeting.collaborators);
+  };
+
+  const verifyUpdate = () => {
+    const item = route.params?.meeting;
+    if (item) {
+      populateForm(item);
+    } else {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
+    setLoading(false);
+  }, [initialValues]);
+
+  useEffect(() => {
+    setLoading(true);
+    verifyUpdate();
     getAllCollaborators();
   }, []);
 
   return (
     <Container>
-      <Formik
-        initialValues={{
-          title: '',
-          description: '',
-        }}
-        onSubmit={(values) => {
-          console.log('values', values);
-          handleSubmit(values);
-        }}
-        validationSchema={FormSchema}
-      >
-        {({values, handleChange, handleSubmit, errors, resetForm}) => (
-          <ContentForm>
-            <Body>
-              <Label>Título</Label>
-              <TextInput
-                ref={title}
-                value={values.title}
-                onChangeText={handleChange('title')}
-              />
-              {errors.title && <Error>{errors.title}</Error>}
-              <Label>Descrição</Label>
-              <TextInput
-                ref={description}
-                value={values.description}
-                onChangeText={handleChange('description')}
-              />
-              {errors.description && <Error>{errors.description}</Error>}
-              <Row>
-                <Label>Date: </Label>
-                <DateSelected>{date.toDateString()}</DateSelected>
-                <IconButton onPress={() => setShowDate(true)}>
-                  <ContentButton>+</ContentButton>
-                </IconButton>
-              </Row>
-              {showDate && (
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={date}
-                  mode="date"
-                  is24Hour={true}
-                  display="default"
-                  onChange={(data) => changeDate(data)}
+      {!loading && (
+        <Formik
+          initialValues={initialValues}
+          onSubmit={(values) => {
+            console.log('values', values);
+            handleSubmit(values);
+          }}
+          validationSchema={FormSchema}
+        >
+          {({values, handleChange, handleSubmit, errors, resetForm}) => (
+            <ContentForm>
+              <Body>
+                <Label>Título</Label>
+                <TextInput
+                  ref={title}
+                  value={values.title}
+                  onChangeText={handleChange('title')}
                 />
-              )}
-              <Row>
-                <Label>Início: </Label>
-                <DateSelected>
-                  {startAt.toTimeString().split(' ')[0]}
-                </DateSelected>
-                <IconButton onPress={() => setShowStartAt(true)}>
-                  <ContentButton>+</ContentButton>
-                </IconButton>
-              </Row>
-              {showStartAt && (
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={date}
-                  mode="time"
-                  is24Hour={true}
-                  display="default"
-                  onChange={(data) => changeStartAt(data)}
+                {errors.title && <Error>{errors.title}</Error>}
+                <Label>Descrição</Label>
+                <TextInput
+                  ref={description}
+                  value={values.description}
+                  onChangeText={handleChange('description')}
                 />
-              )}
-              <Row>
-                <Label>Final: </Label>
-                <DateSelected>
-                  {endAt.toTimeString().split(' ')[0]}
-                </DateSelected>
-                <IconButton onPress={() => setShowEndAt(true)}>
-                  <ContentButton>+</ContentButton>
-                </IconButton>
-              </Row>
-              {showEndAt && (
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={date}
-                  mode="time"
-                  is24Hour={true}
-                  display="default"
-                  onChange={(data) => changeEndAt(data)}
+                {errors.description && <Error>{errors.description}</Error>}
+                <Row>
+                  <Label>Date: </Label>
+                  <DateSelected>{date.toDateString()}</DateSelected>
+                  <IconButton onPress={() => setShowDate(true)}>
+                    <ContentButton>+</ContentButton>
+                  </IconButton>
+                </Row>
+                {showDate && (
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={date}
+                    mode="date"
+                    is24Hour={true}
+                    display="default"
+                    onChange={(data) => changeDate(data)}
+                  />
+                )}
+                <Row>
+                  <Label>Início: </Label>
+                  <DateSelected>
+                    {startAt.toTimeString().split(' ')[0]}
+                  </DateSelected>
+                  <IconButton onPress={() => setShowStartAt(true)}>
+                    <ContentButton>+</ContentButton>
+                  </IconButton>
+                </Row>
+                {showStartAt && (
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={date}
+                    mode="time"
+                    is24Hour={true}
+                    display="default"
+                    onChange={(data) => changeStartAt(data)}
+                  />
+                )}
+                <Row>
+                  <Label>Final: </Label>
+                  <DateSelected>
+                    {endAt.toTimeString().split(' ')[0]}
+                  </DateSelected>
+                  <IconButton onPress={() => setShowEndAt(true)}>
+                    <ContentButton>+</ContentButton>
+                  </IconButton>
+                </Row>
+                {showEndAt && (
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={date}
+                    mode="time"
+                    is24Hour={true}
+                    display="default"
+                    onChange={(data) => changeEndAt(data)}
+                  />
+                )}
+                <ContetMultiSelect>
+                  <SelectMultipleStyled
+                    items={listCollaborators}
+                    selectedItems={collaborators}
+                    onSelectionsChange={onSelectionsChange}
+                  />
+                </ContetMultiSelect>
+                {errosWitoutFormik.collaborators && (
+                  <Error>{errosWitoutFormik.collaborators}</Error>
+                )}
+              </Body>
+              <Footer>
+                <Button
+                  type="primary"
+                  title="SAVE"
+                  size={windowWidth - 40}
+                  action={handleSubmit}
                 />
-              )}
-              <ContetMultiSelect>
-                <SelectMultipleStyled
-                  items={listCollaborators}
-                  selectedItems={collaborators}
-                  onSelectionsChange={onSelectionsChange}
-                />
-              </ContetMultiSelect>
-              {errosWitoutFormik.collaborators && (
-                <Error>{errosWitoutFormik.collaborators}</Error>
-              )}
-            </Body>
-            <Footer>
-              <Button
-                type="primary"
-                title="SAVE"
-                size={windowWidth - 40}
-                action={handleSubmit}
-              />
-            </Footer>
-          </ContentForm>
-        )}
-      </Formik>
+              </Footer>
+            </ContentForm>
+          )}
+        </Formik>
+      )}
     </Container>
   );
 };
