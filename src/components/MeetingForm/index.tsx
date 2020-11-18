@@ -6,6 +6,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Button from '../../shared/components/Button';
 import {Meetings} from '../../types/meetings';
 import {getCollaborators} from '../../services/collaborators';
+import {saveMeeting, getAllMeeting} from '../../services/meetings';
 
 import {
   Container,
@@ -122,6 +123,20 @@ const MeetingForm: React.FC = () => {
     if (valid) {
       const submitItens = {...values, collaborators, date, startAt, endAt};
       console.log('submitItens', submitItens);
+      saveMeeting(submitItens)
+        .then((response) => {
+          console.log('saveeed', response);
+          getAllMeeting()
+            .then((resp) => {
+              console.log('resp', resp);
+            })
+            .catch((err) => {
+              console.log('resperr', err);
+            });
+        })
+        .catch((err) => {
+          console.log('not saveeed', err);
+        });
     }
     console.log('values2', values);
   };
