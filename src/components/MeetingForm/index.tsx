@@ -6,7 +6,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Button from '../../shared/components/Button';
 import {Meetings} from '../../types/meetings';
 import {getCollaborators} from '../../services/collaborators';
-import {saveMeeting, getAllMeeting} from '../../services/meetings';
+import {saveMeeting} from '../../services/meetings';
 
 import {
   Container,
@@ -25,6 +25,7 @@ import {
 } from './styles';
 
 import {useCount} from '../../context/Count';
+import {NavigationContainerRef} from '@react-navigation/native';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -51,7 +52,11 @@ interface Event {
   type: string;
 }
 
-const MeetingForm: React.FC = () => {
+interface MeetingFormProps {
+  navigation: NavigationContainerRef;
+}
+
+const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
   const [date, setDate] = useState(new Date());
   const [startAt, setStartAt] = useState(new Date());
   const [endAt, setEndAt] = useState(new Date());
@@ -126,13 +131,7 @@ const MeetingForm: React.FC = () => {
       saveMeeting(submitItens)
         .then((response) => {
           console.log('saveeed', response);
-          getAllMeeting()
-            .then((resp) => {
-              console.log('resp', resp);
-            })
-            .catch((err) => {
-              console.log('resperr', err);
-            });
+          navigation.navigate('MeetingList');
         })
         .catch((err) => {
           console.log('not saveeed', err);
@@ -168,7 +167,7 @@ const MeetingForm: React.FC = () => {
         }}
         validationSchema={FormSchema}
       >
-        {({values, handleChange, handleSubmit, errors}) => (
+        {({values, handleChange, handleSubmit, errors, resetForm}) => (
           <ContentForm>
             <Body>
               <Label>Título</Label>

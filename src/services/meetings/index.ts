@@ -6,7 +6,7 @@ const generateId = () => {
   return id;
 };
 
-export const getAllMeeting = async () => {
+export const getAllMeetings = async () => {
   // await AsyncStorage.removeItem('meetings');
   const meetings = await AsyncStorage.getItem('meetings');
   if (meetings) {
@@ -18,7 +18,7 @@ export const getAllMeeting = async () => {
 
 export const saveMeeting = async (meeting: Meetings) => {
   const id = generateId();
-  const meetings = await getAllMeeting();
+  const meetings = await getAllMeetings();
 
   const newMeeting: Meetings = {...meeting, id};
 

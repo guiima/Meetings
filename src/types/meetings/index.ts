@@ -1,3 +1,8 @@
+interface Collaborators {
+  value: string;
+  label: string;
+}
+
 export interface Meetings {
   id?: number;
   title: string;
@@ -5,5 +10,5 @@ export interface Meetings {
   date: Date;
   startAt: Date;
   endAt: Date;
-  collaborators: string[];
+  collaborators: Collaborators[];
 }

@@ -20,6 +20,12 @@ const colors = {
   errorMessage: {
     colorText: constants.tigerlily,
   },
+
+  cardMeeting: {
+    colorText: constants.pencillead,
+    borderColor: constants.pencillead,
+    background: constants.squeaky,
+  },
 };
 
 export const theme = {
