@@ -26,6 +26,7 @@ import {
 
 import {useCount} from '../../context/Count';
 import {NavigationContainerRef} from '@react-navigation/native';
+import {Collaborators} from '../../types/collaborators';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -63,7 +64,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
   const [showDate, setShowDate] = useState(false);
   const [showStartAt, setShowStartAt] = useState(false);
   const [showEndAt, setShowEndAt] = useState(false);
-  const [collaborators, setCollaborators] = useState<string[]>([]);
+  const [collaborators, setCollaborators] = useState<Collaborators[]>([]);
   const [listCollaborators, setListCollaborators] = useState<string[]>([]);
   const [errosWitoutFormik, setErrosWitoutFormik] = useState<ErrosProps>({
     collaborators: null,
@@ -100,7 +101,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
     }
   };
 
-  const onSelectionsChange = (selectedCollaborators: string[]) => {
+  const onSelectionsChange = (selectedCollaborators: Collaborators[]) => {
     setCollaborators(selectedCollaborators);
   };
 

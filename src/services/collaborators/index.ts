@@ -1,6 +1,13 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
-const collaborators = ['Pedro', 'Luiz', 'Felipe', 'Matheus', 'Rafael', 'Lucas'];
+const collaborators = [
+  {label: 'Pedro', value: 'Pedro'},
+  {label: 'Luiz', value: 'Luiz'},
+  {label: 'Felipe', value: 'Felipe'},
+  {label: 'Matheus', value: 'Matheus'},
+  {label: 'Matheus', value: 'Matheus'},
+  {label: 'Lucas', value: 'Lucas'},
+];
 
 export const saveCollaborators = async () => {
   return await AsyncStorage.setItem(

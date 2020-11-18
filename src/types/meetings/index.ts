@@ -1,7 +1,4 @@
-interface Collaborators {
-  value: string;
-  label: string;
-}
+import {Collaborators} from '../collaborators';
 
 export interface Meetings {
   id?: number;

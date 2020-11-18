@@ -1,10 +1,11 @@
 import React, {useEffect} from 'react';
 import {NavigationContainerRef} from '@react-navigation/native';
-import {Text, ScrollView, View} from 'react-native';
+import {ScrollView} from 'react-native';
 import Button from '../../shared/components/Button';
 import {getAllMeetings} from '../../services/meetings';
 import {Meetings} from '../../types/meetings';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {Collaborators} from '../../types/collaborators';
 
 import {useState} from 'react';
 import {
