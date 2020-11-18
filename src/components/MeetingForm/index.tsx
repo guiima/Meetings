@@ -121,13 +121,18 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
     }
   };
 
+  const generateId = () => {
+    const id = new Date().getTime();
+    return id;
+  };
+
   const handleSubmit = (values: FormProps) => {
-    // const dataNascimentoPrecisa = moment("1994-05-25 13:00");
-    // console.log('dataNascimentoPrecisa', dataNascimentoPrecisa);
+    const id = generateId();
 
     const valid = validateCollaborators();
+
     if (valid) {
-      const submitItens = {...values, collaborators, date, startAt, endAt};
+      const submitItens = {...values, collaborators, date, startAt, endAt, id};
       console.log('submitItens', submitItens);
       saveMeeting(submitItens)
         .then((response) => {

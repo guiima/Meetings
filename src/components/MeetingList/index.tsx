@@ -5,7 +5,7 @@ import Button from '../../shared/components/Button';
 import {getAllMeetings} from '../../services/meetings';
 import {Meetings} from '../../types/meetings';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {Collaborators} from '../../types/collaborators';
+import {deleteMeeting} from '../../services/meetings';
 
 import {useState} from 'react';
 import {
@@ -54,6 +54,17 @@ const MeetingList: React.FC<MeetingListProps> = ({navigation}) => {
     getMeetings();
   }, [meetings]);
 
+  const handleDelete = (id: number) => {
+    console.log('delete', id);
+    deleteMeeting(id)
+      .then((response) => {
+        console.log('response', response);
+      })
+      .catch((err) => {
+        console.log('err', err);
+      });
+  };
+
   return (
     <Container>
       <Top>
@@ -74,9 +85,7 @@ const MeetingList: React.FC<MeetingListProps> = ({navigation}) => {
               <ContentMeeting>
                 <HeaderCard>
                   <Title>{item.title}</Title>
-                  <DeleteItemButton
-                    onPress={() => console.log('deletei', item.id)}
-                  >
+                  <DeleteItemButton onPress={() => handleDelete(item.id)}>
                     <Icon name="trash" size={18} color="#000" />
                   </DeleteItemButton>
                 </HeaderCard>
