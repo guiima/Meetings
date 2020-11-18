@@ -80,4 +80,5 @@ export const ContetMultiSelect = styled.View`
   border-color: ${theme.colors.primaryTextColor};
   border-radius: 5px;
   padding: 1px;
+  margin-bottom: 20px;
 `;

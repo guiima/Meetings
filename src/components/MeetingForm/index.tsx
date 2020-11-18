@@ -1,11 +1,11 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, Dimensions, ScrollView} from 'react-native';
 import * as Yup from 'yup';
 import {Formik} from 'formik';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import SelectMultiple from 'react-native-select-multiple';
-
 import Button from '../../shared/components/Button';
+import {Meetings} from '../../types/meetings';
+import {getCollaborators} from '../../services/collaborators';
 
 import {
   Container,
@@ -30,10 +30,16 @@ const windowWidth = Dimensions.get('window').width;
 const FormSchema = Yup.object().shape({
   title: Yup.string().required('Insira um título'),
   description: Yup.string(),
-  date: Yup.string().required('Insira a data de início'),
-  startAt: Yup.string().required('Insira a hora do início'),
-  endAt: Yup.string().required('Insira a hora do final'),
 });
+
+interface ErrosProps {
+  collaborators: null | string;
+}
+
+interface FormProps {
+  title: string;
+  description: string;
+}
 
 interface nativeEventProps {
   timestamp?: number;
@@ -44,8 +50,6 @@ interface Event {
   type: string;
 }
 
-// const fruits = ['Apples', 'Oranges', 'Pears', 'Apples', 'Oranges', 'Pears'];
-
 const MeetingForm: React.FC = () => {
   const [date, setDate] = useState(new Date());
   const [startAt, setStartAt] = useState(new Date());
@@ -53,22 +57,15 @@ const MeetingForm: React.FC = () => {
   const [showDate, setShowDate] = useState(false);
   const [showStartAt, setShowStartAt] = useState(false);
   const [showEndAt, setShowEndAt] = useState(false);
-  const [showcollaborators, setShowcollaborators] = useState(false);
-  const [itemSelected, setItemSelected] = useState<string[]>([]);
-  const [fruits, setFruits] = useState<string[]>([
-    'Apples',
-    'Oranges',
-    'Pears',
-    'Apple1s',
-    'Orange1s',
-    'Pear1s',
-  ]);
+  const [collaborators, setCollaborators] = useState<string[]>([]);
+  const [listCollaborators, setListCollaborators] = useState<string[]>([]);
+  const [errosWitoutFormik, setErrosWitoutFormik] = useState<ErrosProps>({
+    collaborators: null,
+  });
 
   const image = useRef(null);
   const title = useRef(null);
   const description = useRef(null);
-
-  const handleChange = () => {};
 
   const changeDate = (Event: Event) => {
     setShowDate((state) => !state);
@@ -79,7 +76,6 @@ const MeetingForm: React.FC = () => {
   };
 
   const changeStartAt = (Event: Event) => {
-    console.log('satratat', Event);
     setShowStartAt((state) => !state);
     if (Event.nativeEvent.timestamp) {
       const timeSelected = new Date(Event.nativeEvent.timestamp);
@@ -98,47 +94,82 @@ const MeetingForm: React.FC = () => {
     }
   };
 
-  const onSelectionsChange = (selectedFruits: string[]) => {
-    // selectedFruits is array of { label, value }
-    console.log('selectedFruits', selectedFruits);
-    setItemSelected(selectedFruits);
+  const onSelectionsChange = (selectedCollaborators: string[]) => {
+    setCollaborators(selectedCollaborators);
   };
+
+  const validateCollaborators = () => {
+    if (collaborators.length <= 0) {
+      setErrosWitoutFormik({
+        ...errosWitoutFormik,
+        collaborators: 'Selecione ao menos um colaborador.',
+      });
+      return false;
+    } else {
+      setErrosWitoutFormik({
+        ...errosWitoutFormik,
+        collaborators: null,
+      });
+      return true;
+    }
+  };
+
+  const handleSubmit = (values: FormProps) => {
+    // const dataNascimentoPrecisa = moment("1994-05-25 13:00");
+    // console.log('dataNascimentoPrecisa', dataNascimentoPrecisa);
+
+    const valid = validateCollaborators();
+    if (valid) {
+      const submitItens = {...values, collaborators, date, startAt, endAt};
+      console.log('submitItens', submitItens);
+    }
+    console.log('values2', values);
+  };
+
+  const getAllCollaborators = () => {
+    getCollaborators()
+      .then((response) => {
+        setListCollaborators(response);
+      })
+      .catch((err) => {
+        console.warn('err', err);
+      });
+  };
+
+  useEffect(() => {
+    getAllCollaborators();
+  }, []);
 
   return (
     <Container>
       <Formik
         initialValues={{
-          image: '',
           title: '',
           description: '',
-          date: new Date(),
-          startAt: '',
-          endAt: '',
         }}
         onSubmit={(values) => {
           console.log('values', values);
+          handleSubmit(values);
         }}
         validationSchema={FormSchema}
       >
         {({values, handleChange, handleSubmit, errors}) => (
           <ContentForm>
             <Body>
-              <Label>Title</Label>
-
+              <Label>Título</Label>
               <TextInput
                 ref={title}
                 value={values.title}
                 onChangeText={handleChange('title')}
               />
               {errors.title && <Error>{errors.title}</Error>}
-              <Label>Description</Label>
+              <Label>Descrição</Label>
               <TextInput
                 ref={description}
                 value={values.description}
                 onChangeText={handleChange('description')}
               />
               {errors.description && <Error>{errors.description}</Error>}
-
               <Row>
                 <Label>Date: </Label>
                 <DateSelected>{date.toDateString()}</DateSelected>
@@ -151,13 +182,11 @@ const MeetingForm: React.FC = () => {
                   testID="dateTimePicker"
                   value={date}
                   mode="date"
-                  // is24Hour={true}
+                  is24Hour={true}
                   display="default"
                   onChange={(data) => changeDate(data)}
                 />
               )}
-              {errors.startAt && <Error>{errors.startAt}</Error>}
-
               <Row>
                 <Label>Início: </Label>
                 <DateSelected>
@@ -167,7 +196,6 @@ const MeetingForm: React.FC = () => {
                   <ContentButton>+</ContentButton>
                 </IconButton>
               </Row>
-
               {showStartAt && (
                 <DateTimePicker
                   testID="dateTimePicker"
@@ -178,8 +206,6 @@ const MeetingForm: React.FC = () => {
                   onChange={(data) => changeStartAt(data)}
                 />
               )}
-              {errors.startAt && <Error>{errors.startAt}</Error>}
-
               <Row>
                 <Label>Final: </Label>
                 <DateSelected>
@@ -199,17 +225,17 @@ const MeetingForm: React.FC = () => {
                   onChange={(data) => changeEndAt(data)}
                 />
               )}
-              {errors.endAt && <Error>{errors.endAt}</Error>}
-
               <ContetMultiSelect>
                 <SelectMultipleStyled
-                  items={fruits}
-                  selectedItems={itemSelected}
+                  items={listCollaborators}
+                  selectedItems={collaborators}
                   onSelectionsChange={onSelectionsChange}
                 />
               </ContetMultiSelect>
+              {errosWitoutFormik.collaborators && (
+                <Error>{errosWitoutFormik.collaborators}</Error>
+              )}
             </Body>
-
             <Footer>
               <Button
                 type="primary"
