@@ -190,6 +190,12 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
       });
   };
 
+  const formatDate = (date: Date) => {
+    const newDate = new Date(date);
+    const dateFormated = newDate.toISOString().split('T');
+    return dateFormated[0];
+  };
+
   const populateForm = (meeting: Meetings) => {
     setInitialValues({
       title: meeting.title,
@@ -252,7 +258,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
                 {errors.description && <Error>{errors.description}</Error>}
                 <Row>
                   <Label>Data: </Label>
-                  <DateSelected>{date.toDateString()}</DateSelected>
+                  <DateSelected>{formatDate(date)}</DateSelected>
                   <IconButton onPress={() => setShowDate(true)}>
                     <ContentButton>+</ContentButton>
                   </IconButton>

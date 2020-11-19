@@ -10,13 +10,7 @@ interface WelcomeProps {
 
 const Welcome: React.FC<WelcomeProps> = ({navigation}) => {
   const savingCollaborators = () => {
-    saveCollaborators()
-      .then((response) => {
-        // save collaborators
-      })
-      .catch((err) => {
-        // error
-      });
+    saveCollaborators();
   };
 
   useEffect(() => {
@@ -25,7 +19,7 @@ const Welcome: React.FC<WelcomeProps> = ({navigation}) => {
 
   return (
     <Container>
-      <Title>Bem vindo ao meeting</Title>
+      <Title>Bem vindo ao Meetings</Title>
       <Button
         size={150}
         type="primary"
