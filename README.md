@@ -23,6 +23,7 @@ Aplicativo para agendamentos de reuniões:
 
 + React Native
 + Context API
++ TypeScript
 + Styled Components
 
 
