@@ -45,8 +45,8 @@ const Welcome: React.FC<WelcomeProps> = ({navigation}) => {
         title="ENTRAR"
         action={() => {
           setMessage('Item salvo com sucesso!');
-          setShowNotification(true);
-          setTypeMessage(TypeNotification.sucess);
+          setShowNotification(!showNotification);
+          setTypeMessage(TypeNotification.error);
         }}
         // action={() => navigation.navigate('MeetingList')}
       />

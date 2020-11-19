@@ -2,12 +2,7 @@ import React from 'react';
 import styled from 'styled-components/native';
 import {theme} from '../../styles/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-export enum TypeNotificationEnum {
-  Success = 0,
-  Error = 1,
-  Warning = 2,
-}
+import {useMessage, TypeNotification} from '../../context/Notification';
 
 interface TouchableOpacityProps {
   background: string;
@@ -20,7 +15,7 @@ const TouchableOpacity = styled.TouchableOpacity`
   position: absolute;
   align-self: center;
   top: 8px;
-  z-index: 5;
+  z-index: 99;
   border-radius: 5px;
   align-items: center;
   justify-content: space-between;
@@ -35,16 +30,20 @@ const Text = styled.Text`
 `;
 
 const NotificationCard = () => {
-  const {showNotification, message, notificationType} = useSelector(
-    (state: any) => state.NotificationReducer,
-  );
-  const dispatch = useDispatch();
+  const {
+    message,
+    showNotification,
+    setShowNotification,
+    typeMessage,
+  } = useMessage();
+
+  console.log('showNotificationCard', showNotification);
 
   const setBackground = () => {
-    switch (notificationType) {
-      case TypeNotificationEnum.Success:
+    switch (typeMessage) {
+      case TypeNotification.sucess:
         return theme.colors.notification.success;
-      case TypeNotificationEnum.Error:
+      case TypeNotification.error:
         return theme.colors.notification.error;
       default:
         return theme.colors.notification.success;
@@ -53,12 +52,12 @@ const NotificationCard = () => {
 
   return showNotification ? (
     <TouchableOpacity
-      // onPress={() => dispatch({type: types.TOGGLE_NOTIFICATION})}
+      onPress={() => setShowNotification(false)}
       background={setBackground()}
     >
-      <Icon name="exclamation" />
+      <Icon name="exclamation-circle" color="#fff" />
       <Text>{message}</Text>
-      <Icon name="close" />
+      <Icon name="close" color="#fff" />
     </TouchableOpacity>
   ) : null;
 };

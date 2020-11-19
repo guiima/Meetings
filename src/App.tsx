@@ -3,6 +3,7 @@ import React from 'react';
 import {LogBox} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import Routes from './routes';
+import NotificationCard from './shared/NotificationCard';
 
 LogBox.ignoreLogs(['componentWillReceiveProps']);
 
@@ -26,6 +27,7 @@ const App: React.FC = () => {
     >
       <NavigationContainer>
         <Routes />
+        <NotificationCard />
       </NavigationContainer>
     </MessageContext.Provider>
   );
