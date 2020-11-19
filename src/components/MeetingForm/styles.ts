@@ -20,7 +20,7 @@ export const ContentForm = styled.View`
 
 export const TextInput = styled.TextInput`
   border: 1px solid;
-  border-color: gray;
+  border-color: ${theme.colors.primaryTextColor};
   border-radius: 5px;
   margin-bottom: 20px;
 `;
