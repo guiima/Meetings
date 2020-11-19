@@ -3,15 +3,24 @@ import {NavigationContainerRef} from '@react-navigation/native';
 import Button from '../../shared/components/Button';
 import {Container, Title} from './styles';
 import {saveCollaborators} from '../../services/collaborators';
-import {useMessage, TypeMessage} from '../../context/Notification';
+import {useMessage, TypeNotification} from '../../context/Notification';
 
 interface WelcomeProps {
   navigation: NavigationContainerRef;
 }
 
 const Welcome: React.FC<WelcomeProps> = ({navigation}) => {
-  const {message, setMessage} = useMessage();
-  console.log(message);
+  const {
+    message,
+    setMessage,
+    showNotification,
+    setShowNotification,
+    setTypeMessage,
+    typeMessage,
+  } = useMessage();
+  console.log('message', message);
+  console.log('showNotification', showNotification);
+  console.log('typeMessage', typeMessage);
 
   const savingCollaborators = () => {
     saveCollaborators()
@@ -34,7 +43,11 @@ const Welcome: React.FC<WelcomeProps> = ({navigation}) => {
         size={150}
         type="primary"
         title="ENTRAR"
-        action={() => setMessage(TypeMessage.sucess)}
+        action={() => {
+          setMessage('Item salvo com sucesso!');
+          setShowNotification(true);
+          setTypeMessage(TypeNotification.sucess);
+        }}
         // action={() => navigation.navigate('MeetingList')}
       />
     </Container>

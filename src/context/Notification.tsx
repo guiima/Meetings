@@ -1,18 +1,26 @@
 import React, {createContext, useContext} from 'react';
 
-export enum TypeMessage {
+export enum TypeNotification {
   sucess = 'sucess',
   error = 'error',
 }
 
-export type MessageContextType = {
-  message: TypeMessage;
-  setMessage: (Theme: TypeMessage) => void;
+export type NotificationContextType = {
+  typeMessage: TypeNotification;
+  message: string;
+  showNotification: boolean;
+  setMessage: (message: string) => void;
+  setShowNotification: (value: boolean) => void;
+  setTypeMessage: (message: TypeNotification) => void;
 };
 
-export const MessageContext = createContext<MessageContextType>({
-  message: TypeMessage.sucess,
-  setMessage: (message) => console.warn('no theme provider'),
+export const MessageContext = createContext<NotificationContextType>({
+  message: '',
+  setMessage: (message) => {},
+  showNotification: false,
+  setShowNotification: () => {},
+  typeMessage: TypeNotification.sucess,
+  setTypeMessage: () => {},
 });
 
 export const useMessage = () => useContext(MessageContext);
