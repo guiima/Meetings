@@ -15,7 +15,6 @@ export const ContentForm = styled.View`
   align-self: center;
   padding-top: 50px;
   justify-content: space-between;
-  /* background-color: red; */
   flex: 1;
 `;
 

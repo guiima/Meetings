@@ -5,7 +5,6 @@ const collaborators = [
   {label: 'Luiz', value: 'Luiz'},
   {label: 'Felipe', value: 'Felipe'},
   {label: 'Matheus', value: 'Matheus'},
-  {label: 'Matheus', value: 'Matheus'},
   {label: 'Lucas', value: 'Lucas'},
 ];
 

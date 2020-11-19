@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, Text, Dimensions, ScrollView} from 'react-native';
+import {Dimensions} from 'react-native';
 import * as Yup from 'yup';
 import {Formik} from 'formik';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -8,6 +8,9 @@ import {Meetings} from '../../types/meetings';
 import {getCollaborators} from '../../services/collaborators';
 import {saveMeeting, updateMeeting} from '../../services/meetings';
 import {useRoute, RouteProp} from '@react-navigation/native';
+import {NavigationContainerRef} from '@react-navigation/native';
+import {Collaborators} from '../../types/collaborators';
+import {useMessage, TypeNotification} from '../../context/Notification';
 
 import {
   Container,
@@ -24,10 +27,6 @@ import {
   Error,
   ContetMultiSelect,
 } from './styles';
-
-import {NavigationContainerRef} from '@react-navigation/native';
-import {Collaborators} from '../../types/collaborators';
-import {useMessage, TypeNotification} from '../../context/Notification';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -88,14 +87,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
   const [idItemUpdate, setIdItemUpdate] = useState<number | undefined>(
     undefined,
   );
-  const {
-    message,
-    setMessage,
-    showNotification,
-    setShowNotification,
-    setTypeMessage,
-    typeMessage,
-  } = useMessage();
+  const {setMessage, setShowNotification, setTypeMessage} = useMessage();
 
   const changeDate = (Event: Event) => {
     setShowDate((state) => !state);
@@ -109,17 +101,14 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
     setShowStartAt((state) => !state);
     if (Event.nativeEvent.timestamp) {
       const timeSelected = new Date(Event.nativeEvent.timestamp);
-      console.log('timeSelected', timeSelected);
       setStartAt(timeSelected);
     }
   };
 
   const changeEndAt = (Event: Event) => {
-    console.log('satratat', Event);
     setShowEndAt((state) => !state);
     if (Event.nativeEvent.timestamp) {
       const timeSelected = new Date(Event.nativeEvent.timestamp);
-      console.log('timeSelected', timeSelected);
       setEndAt(timeSelected);
     }
   };
@@ -134,12 +123,14 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
         ...errosWitoutFormik,
         collaborators: 'Selecione ao menos um colaborador.',
       });
+
       return false;
     } else {
       setErrosWitoutFormik({
         ...errosWitoutFormik,
         collaborators: null,
       });
+
       return true;
     }
   };
@@ -157,12 +148,12 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
     const submitItens = {...values, collaborators, date, startAt, endAt, id};
 
     if (valid && !isUpdate) {
-      console.log('submitItens', submitItens);
       saveMeeting(submitItens)
         .then((response) => {
           setMessage('Reunião salva com sucesso!');
           setTypeMessage(TypeNotification.sucess);
           setShowNotification(true);
+
           navigation.navigate('MeetingList');
         })
         .catch(() => {
@@ -171,12 +162,12 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
           setShowNotification(true);
         });
     } else if (valid && isUpdate) {
-      console.log('UPDATE');
       updateMeeting(submitItens)
         .then((reponse) => {
           setMessage('Alteração realizada com sucesso!');
           setTypeMessage(TypeNotification.sucess);
           setShowNotification(true);
+
           navigation.navigate('MeetingList');
         })
         .catch((err) => {
@@ -193,7 +184,9 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
         setListCollaborators(response);
       })
       .catch((err) => {
-        console.warn('err', err);
+        setMessage('Não foi possível carregar a lista de colaboradores!');
+        setTypeMessage(TypeNotification.error);
+        setShowNotification(true);
       });
   };
 
@@ -236,7 +229,6 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
         <Formik
           initialValues={initialValues}
           onSubmit={(values) => {
-            console.log('values', values);
             handleSubmit(values);
           }}
           validationSchema={FormSchema}

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {NavigationContainerRef} from '@react-navigation/native';
 import {ScrollView} from 'react-native';
 import Button from '../../shared/components/Button';
@@ -6,8 +6,8 @@ import {getAllMeetings} from '../../services/meetings';
 import {Meetings} from '../../types/meetings';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {deleteMeeting} from '../../services/meetings';
+import {useMessage, TypeNotification} from '../../context/Notification';
 
-import {useState} from 'react';
 import {
   Container,
   Top,
@@ -20,22 +20,13 @@ import {
   HeaderCard,
 } from './styles';
 
-import {useMessage, TypeNotification} from '../../context/Notification';
-
 interface MeetingListProps {
   navigation: NavigationContainerRef;
 }
 
 const MeetingList: React.FC<MeetingListProps> = ({navigation}) => {
   const [meetings, setMeetings] = useState<Meetings[]>([]);
-  const {
-    message,
-    setMessage,
-    showNotification,
-    setShowNotification,
-    setTypeMessage,
-    typeMessage,
-  } = useMessage();
+  const {setMessage, setShowNotification, setTypeMessage} = useMessage();
 
   const getMeetings = () => {
     getAllMeetings()
@@ -43,7 +34,9 @@ const MeetingList: React.FC<MeetingListProps> = ({navigation}) => {
         setMeetings(response);
       })
       .catch((err) => {
-        console.warn(err);
+        setMessage('Não foi possível carregar a lista de reuniões!');
+        setTypeMessage(TypeNotification.error);
+        setShowNotification(true);
       });
   };
 
@@ -65,7 +58,6 @@ const MeetingList: React.FC<MeetingListProps> = ({navigation}) => {
   }, [meetings]);
 
   const handleDelete = (id: number) => {
-    console.log('delete', id);
     deleteMeeting(id)
       .then((response) => {
         setMessage('Reunião deletada com sucesso!');
