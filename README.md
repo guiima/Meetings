@@ -5,7 +5,7 @@
 Aplicativo para agendamentos de reuniões:
  - O usuário poderá adicionar uma reunião, com os seguintes dados:
     - Objetivo da Reunião
-    - Horário
+    - Data, Horára de início e término
     - Colaboradores envolvidos
  - O usuário poderá deletar uma reunião
  - O usuário poderá alterar os dados de uma reunião
@@ -19,7 +19,7 @@ Aplicativo para agendamentos de reuniões:
 ###### ```yarn android```
 
 
-#### Tecnologias utilizadas :woman_technologist:
+#### Tecnologias utilizadas
 
 + React Native
 + Context API
