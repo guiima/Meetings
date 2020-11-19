@@ -21,38 +21,29 @@ export const saveMeeting = async (meeting: Meetings) => {
   } else {
     return await AsyncStorage.setItem('meetings', JSON.stringify([meeting]));
   }
-
-  // const meetings = await AsyncStorage.removeItem('meetings');
 };
 
 export const updateMeeting = async (meeting: Meetings) => {
-  // get item e remove o item com id correto
-  const meetings = await AsyncStorage.getItem('meetings');
-  if (meetings) {
-    const objectMeetings: Meetings[] = JSON.parse(meetings);
-    const newMeetings = objectMeetings.filter((item) => {
-      if (item.id !== meeting.id) {
-        return item;
-      }
-    });
+  const objectMeetings: Meetings[] = await getAllMeetings();
+  const newMeetings = objectMeetings.filter((item) => {
+    if (item.id !== meeting.id) {
+      return item;
+    }
+  });
 
-    return await AsyncStorage.setItem(
-      'meetings',
-      JSON.stringify([meeting, ...newMeetings]),
-    );
-  }
+  return await AsyncStorage.setItem(
+    'meetings',
+    JSON.stringify([meeting, ...newMeetings]),
+  );
 };
 
 export const deleteMeeting = async (id: number) => {
-  const meetings = await AsyncStorage.getItem('meetings');
-  if (meetings) {
-    const objectMeetings: Meetings[] = JSON.parse(meetings);
-    const newMeetings = objectMeetings.filter((item) => {
-      if (item.id !== id) {
-        return item;
-      }
-    });
+  const objectMeetings: Meetings[] = await getAllMeetings();
+  const newMeetings = objectMeetings.filter((item) => {
+    if (item.id !== id) {
+      return item;
+    }
+  });
 
-    return await AsyncStorage.setItem('meetings', JSON.stringify(newMeetings));
-  }
+  return await AsyncStorage.setItem('meetings', JSON.stringify(newMeetings));
 };

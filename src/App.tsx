@@ -3,7 +3,7 @@ import React from 'react';
 import {LogBox} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import Routes from './routes';
-import NotificationCard from './shared/NotificationCard';
+import NotificationCard from './shared/components/NotificationCard';
 
 LogBox.ignoreLogs(['componentWillReceiveProps']);
 
