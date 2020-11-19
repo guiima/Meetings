@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components/native';
 import {theme} from '../../styles/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -38,6 +38,13 @@ const NotificationCard = () => {
   } = useMessage();
 
   console.log('showNotificationCard', showNotification);
+
+  useEffect(() => {
+    setTimeout(function () {
+      console.log('Executa uma vez após 1 segundo.');
+      setShowNotification(false);
+    }, 2000);
+  }, [showNotification]);
 
   const setBackground = () => {
     switch (typeMessage) {

@@ -20,12 +20,22 @@ import {
   HeaderCard,
 } from './styles';
 
+import {useMessage, TypeNotification} from '../../context/Notification';
+
 interface MeetingListProps {
   navigation: NavigationContainerRef;
 }
 
 const MeetingList: React.FC<MeetingListProps> = ({navigation}) => {
   const [meetings, setMeetings] = useState<Meetings[]>([]);
+  const {
+    message,
+    setMessage,
+    showNotification,
+    setShowNotification,
+    setTypeMessage,
+    typeMessage,
+  } = useMessage();
 
   const getMeetings = () => {
     getAllMeetings()
@@ -58,10 +68,14 @@ const MeetingList: React.FC<MeetingListProps> = ({navigation}) => {
     console.log('delete', id);
     deleteMeeting(id)
       .then((response) => {
-        console.log('response', response);
+        setMessage('Reunião deletada com sucesso!');
+        setTypeMessage(TypeNotification.sucess);
+        setShowNotification(true);
       })
       .catch((err) => {
-        console.log('err', err);
+        setMessage('Não foi possível deletar essa reunião!');
+        setTypeMessage(TypeNotification.error);
+        setShowNotification(true);
       });
   };
 

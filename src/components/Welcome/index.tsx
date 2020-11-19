@@ -43,12 +43,12 @@ const Welcome: React.FC<WelcomeProps> = ({navigation}) => {
         size={150}
         type="primary"
         title="ENTRAR"
-        action={() => {
-          setMessage('Item salvo com sucesso!');
-          setShowNotification(!showNotification);
-          setTypeMessage(TypeNotification.error);
-        }}
-        // action={() => navigation.navigate('MeetingList')}
+        // action={() => {
+        //   setMessage('Item salvo com sucesso!');
+        //   setShowNotification(!showNotification);
+        //   setTypeMessage(TypeNotification.error);
+        // }}
+        action={() => navigation.navigate('MeetingList')}
       />
     </Container>
   );

@@ -25,9 +25,9 @@ import {
   ContetMultiSelect,
 } from './styles';
 
-import {useCount} from '../../context/Count';
 import {NavigationContainerRef} from '@react-navigation/native';
 import {Collaborators} from '../../types/collaborators';
+import {useMessage, TypeNotification} from '../../context/Notification';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -88,6 +88,14 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
   const [idItemUpdate, setIdItemUpdate] = useState<number | undefined>(
     undefined,
   );
+  const {
+    message,
+    setMessage,
+    showNotification,
+    setShowNotification,
+    setTypeMessage,
+    typeMessage,
+  } = useMessage();
 
   const changeDate = (Event: Event) => {
     setShowDate((state) => !state);
@@ -152,21 +160,29 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
       console.log('submitItens', submitItens);
       saveMeeting(submitItens)
         .then((response) => {
-          console.log('saveeed', response);
+          setMessage('Reunião salva com sucesso!');
+          setTypeMessage(TypeNotification.sucess);
+          setShowNotification(true);
           navigation.navigate('MeetingList');
         })
-        .catch((err) => {
-          console.log('not saveeed', err);
+        .catch(() => {
+          setMessage('Não foi possível salvar essa reunião!');
+          setTypeMessage(TypeNotification.error);
+          setShowNotification(true);
         });
     } else if (valid && isUpdate) {
       console.log('UPDATE');
       updateMeeting(submitItens)
         .then((reponse) => {
-          console.log('reponse', reponse);
+          setMessage('Alteração realizada com sucesso!');
+          setTypeMessage(TypeNotification.sucess);
+          setShowNotification(true);
           navigation.navigate('MeetingList');
         })
         .catch((err) => {
-          console.log('err', err);
+          setMessage('Não foi possível realizar essa alteração!');
+          setTypeMessage(TypeNotification.error);
+          setShowNotification(true);
         });
     }
   };
@@ -311,7 +327,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
               <Footer>
                 <Button
                   type="primary"
-                  title="SALVAR"
+                  title={isUpdate ? 'ALTERAR' : 'SALVAR'}
                   size={windowWidth - 40}
                   action={handleSubmit}
                 />
