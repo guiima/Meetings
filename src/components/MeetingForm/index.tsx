@@ -6,7 +6,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Button from '../../shared/components/Button';
 import {Meetings} from '../../types/meetings';
 import {getCollaborators} from '../../services/collaborators';
-import {saveMeeting} from '../../services/meetings';
+import {saveMeeting, updateMeeting} from '../../services/meetings';
 import {useRoute, RouteProp} from '@react-navigation/native';
 
 import {
@@ -84,6 +84,10 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
   const description = useRef(null);
   const route = useRoute<RouteProp<ParamList, 'MeetingForm'>>();
   const [loading, setLoading] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [idItemUpdate, setIdItemUpdate] = useState<number | undefined>(
+    undefined,
+  );
 
   const changeDate = (Event: Event) => {
     setShowDate((state) => !state);
@@ -138,12 +142,13 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
   };
 
   const handleSubmit = (values: FormProps) => {
-    const id = generateId();
+    const id = idItemUpdate ? idItemUpdate : generateId();
 
     const valid = validateCollaborators();
 
-    if (valid) {
-      const submitItens = {...values, collaborators, date, startAt, endAt, id};
+    const submitItens = {...values, collaborators, date, startAt, endAt, id};
+
+    if (valid && !isUpdate) {
       console.log('submitItens', submitItens);
       saveMeeting(submitItens)
         .then((response) => {
@@ -153,8 +158,17 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
         .catch((err) => {
           console.log('not saveeed', err);
         });
+    } else if (valid && isUpdate) {
+      console.log('UPDATE');
+      updateMeeting(submitItens)
+        .then((reponse) => {
+          console.log('reponse', reponse);
+          navigation.navigate('MeetingList');
+        })
+        .catch((err) => {
+          console.log('err', err);
+        });
     }
-    console.log('values2', values);
   };
 
   const getAllCollaborators = () => {
@@ -172,6 +186,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
       title: meeting.title,
       description: meeting.description ? meeting.description : '',
     });
+
     setDate(new Date(meeting.date));
     setStartAt(new Date(meeting.startAt));
     setEndAt(new Date(meeting.endAt));
@@ -181,7 +196,9 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
   const verifyUpdate = () => {
     const item = route.params?.meeting;
     if (item) {
+      setIsUpdate(true);
       populateForm(item);
+      setIdItemUpdate(item.id);
     } else {
       setLoading(false);
     }
@@ -226,7 +243,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
                 />
                 {errors.description && <Error>{errors.description}</Error>}
                 <Row>
-                  <Label>Date: </Label>
+                  <Label>Data: </Label>
                   <DateSelected>{date.toDateString()}</DateSelected>
                   <IconButton onPress={() => setShowDate(true)}>
                     <ContentButton>+</ContentButton>
@@ -294,7 +311,7 @@ const MeetingForm: React.FC<MeetingFormProps> = ({navigation}) => {
               <Footer>
                 <Button
                   type="primary"
-                  title="SAVE"
+                  title="SALVAR"
                   size={windowWidth - 40}
                   action={handleSubmit}
                 />

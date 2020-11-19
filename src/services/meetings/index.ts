@@ -25,9 +25,22 @@ export const saveMeeting = async (meeting: Meetings) => {
   // const meetings = await AsyncStorage.removeItem('meetings');
 };
 
-export const updateMeeting = async (id: number) => {
+export const updateMeeting = async (meeting: Meetings) => {
   // get item e remove o item com id correto
   const meetings = await AsyncStorage.getItem('meetings');
+  if (meetings) {
+    const objectMeetings: Meetings[] = JSON.parse(meetings);
+    const newMeetings = objectMeetings.filter((item) => {
+      if (item.id !== meeting.id) {
+        return item;
+      }
+    });
+
+    return await AsyncStorage.setItem(
+      'meetings',
+      JSON.stringify([meeting, ...newMeetings]),
+    );
+  }
 };
 
 export const deleteMeeting = async (id: number) => {
