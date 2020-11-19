@@ -5,6 +5,8 @@ const colors = {
 
   primaryTextColor: constants.pencillead,
 
+  secondaryTextColor: constants.white,
+
   primaryColor: constants.cornflower,
 
   primaryButton: {
@@ -25,6 +27,11 @@ const colors = {
     colorText: constants.pencillead,
     borderColor: constants.pencillead,
     background: constants.squeaky,
+  },
+
+  notification: {
+    error: constants.tigerlily,
+    success: constants.mintleaf,
   },
 };
 

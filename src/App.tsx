@@ -6,15 +6,17 @@ import Routes from './routes';
 
 LogBox.ignoreLogs(['componentWillReceiveProps']);
 
-import CountProvider from './context/Count';
+import {MessageContext, TypeMessage} from './context/Notification';
 
 const App: React.FC = () => {
+  const [message, setMessage] = React.useState(TypeMessage.sucess);
+
   return (
-    <CountProvider>
+    <MessageContext.Provider value={{message, setMessage}}>
       <NavigationContainer>
         <Routes />
       </NavigationContainer>
-    </CountProvider>
+    </MessageContext.Provider>
   );
 };
 
