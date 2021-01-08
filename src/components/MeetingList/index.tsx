@@ -31,7 +31,10 @@ const MeetingList: React.FC<MeetingListProps> = ({navigation}) => {
   const getMeetings = () => {
     getAllMeetings()
       .then((response) => {
-        setMeetings(response);
+        if (response) {
+          setMeetings(response);
+        }
+        console.log('resp', response);
       })
       .catch((err) => {
         setMessage('Não foi possível carregar a lista de reuniões!');
@@ -81,6 +84,7 @@ const MeetingList: React.FC<MeetingListProps> = ({navigation}) => {
           action={() => navigation.navigate('MeetingForm')}
         />
       </Top>
+      {console.log('meetings', meetings)}
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
         {meetings.map((item) => {
           return (
